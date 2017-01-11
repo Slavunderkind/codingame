@@ -17,16 +17,19 @@ class MimeType
     associations
   end
 
+  def match_file(filename)
+    splitted_fname = filename.split('.')
+    result = 'UNKNOWN'
+    if splitted_fname.size > 1 && filename[-1] != '.'
+      result = associations.fetch(splitted_fname.last.downcase, 'UNKNOWN')
+    end
+    result
+  end
+
   def start
     q.times do
       fname = gets.chomp # One file name per line.
-      splitted_fname = fname.split('.')
-      result = nil
-      if splitted_fname.size > 1 && fname[-1] != '.'
-        result = associations.fetch(splitted_fname.last.downcase, 'UNKNOWN')
-      end
-      result = 'UNKNOWN' if result.nil?
-      puts result
+      puts match_file(fname)
     end
   end
 end
