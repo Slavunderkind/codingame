@@ -27,14 +27,14 @@ class ChuckNorris
     result
   end
 
-  def norris_parse(array)
+  def norris_parse(series_array)
     result = ''
-    array.each do |a|
-      if a[0].zero?
-        result += '00 '
-      else
-        result += '0 '
-      end
+    series_array.each do |a|
+      result += if a[0].zero?
+                  '00 '
+                else
+                  '0 '
+                end
       result += '0' * a[1] + ' '
     end
     result.strip
@@ -44,8 +44,8 @@ class ChuckNorris
     binary = @message.each_char.each_with_object('') do |char, b|
       b << convert_in_binary(convert_in_ascii(char))
     end
-    array = split_series binary.each_char.map(&:to_i)
-    output = norris_parse array
+    array = split_series(binary.each_char.map(&:to_i))
+    output = norris_parse(array)
     puts output
   end
 end
