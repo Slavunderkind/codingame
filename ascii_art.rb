@@ -3,29 +3,22 @@ class AsciiArt
   attr_accessor :ascii_style, :letter_width, :letter_height, :word, :lines
 
   def initialize
-    letters = ('A'..'Z').to_a
-    @ascii_style = letters << '?'
+    @ascii_style = ('A'..'Z').to_a << '?'
     @letter_width = gets.to_i
     @letter_height = gets.to_i
     @word = gets.chomp
   end
 
   def letter_index(letter)
-    if ascii_style.find_index(letter.upcase)
-      ascii_style.find_index(letter.upcase)
-    else
-      ascii_style.size - 1
-    end
+    index = ascii_style.find_index(letter.upcase)
+    index ? index : ascii_style.size - 1
   end
 
   def start
     letter_height.times do
       row = gets.chomp
       splitted_row = row.scan(/.{#{letter_width}}|./)
-      line = ''
-      word.each_char do |letter|
-        line += splitted_row[letter_index(letter)]
-      end
+      line = word.chars.map { |letter| splitted_row[letter_index(letter)] }.join
       puts line
     end
   end
