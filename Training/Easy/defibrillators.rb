@@ -1,12 +1,12 @@
 # Solution for https://www.codingame.com/ide/puzzle/defibrillators
 class Defibrillators
-  attr_accessor :lon, :lat, :n, :defibrilators
+  attr_accessor :lon, :lat, :n, :defibrillators
 
   def initialize
     @lon = parse(gets.chomp)
     @lat = parse(gets.chomp)
     @n = gets.to_i
-    @defibrilators = {}
+    @defibrillators = {}
   end
 
   def calculate_x(d_long, d_lat)
@@ -26,11 +26,11 @@ class Defibrillators
     (var.sub(',', '.').to_f * Math::PI) / 180
   end
 
-  def find_closest(defibrilators_hash)
-    min = defibrilators_hash.values.first
-    closest_name = defibrilators_hash.keys.first
+  def find_closest(defibrillators_hash)
+    min = defibrillators_hash.values.first
+    closest_name = defibrillators_hash.keys.first
 
-    defibrilators_hash.map do |key, value|
+    defibrillators_hash.map do |key, value|
       if value < min
         min = value
         closest_name = key
@@ -39,18 +39,18 @@ class Defibrillators
     closest_name
   end
 
-  def init_defibrilators(defibrilator)
-    d_long = parse(defibrilator[4])
-    d_lat = parse(defibrilator[5])
+  def init_defibrillators(defibrillator)
+    d_long = parse(defibrillator[4])
+    d_lat = parse(defibrillator[5])
     x = calculate_x(d_long, d_lat)
     y = calculate_y(d_lat)
-    defibrilators[defibrilator[1]] = distance(x, y)
+    defibrillators[defibrillator[1]] = distance(x, y)
   end
 
   def start
     n.times do
       defib = gets.chomp
-      init_defibrilators(defib.split(';'))
+      init_defibrillators(defib.split(';'))
     end
     puts find_closest(defibrillators)
   end
