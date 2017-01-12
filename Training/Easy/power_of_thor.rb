@@ -7,58 +7,52 @@ class Thor
     @light_x, @light_y, @x, @y = gets.split(' ').collect(&:to_i)
   end
 
-  def find_direction
-    direction = ''
-    if x < light_x
-      direction = 'E'
-      if y > light_y
-        direction = 'NE'
-      else
-        direction = 'SE' unless y == light_y
-      end
-    elsif x == light_x
-      if y > light_y
-        direction = 'N'
-      else
-        direction = 'S'
-      end
+  def move_north
+    self.y -= 1
+    if x == light_x
+      puts 'N'
+    elsif x > light_x
+      self.x -= 1
+      puts 'NW'
     else
-      direction = 'W'
-      if y > light_y
-        direction = 'NW'
-      else
-        direction = 'SW' unless y == light_y
-      end
+      self.x += 1
+      puts 'NE'
     end
-    move(direction)
-    direction
   end
 
-  def move(direction)
-    case direction
-    when 'N' then self.y -= 1
-    when 'NE'
-      self.y -= 1
-      self.x += 1
-    when 'E' then self.x += 1
-    when 'SE'
-      self.x += 1
-      self.y += 1
-    when 'S' then self.y += 1
-    when 'SW'
-      self.y += 1
+  def move_south
+    self.y += 1
+    if x == light_x
+      puts 'S'
+    elsif x > light_x
       self.x -= 1
-    when 'W' then self.x -= 1
-    when 'NW'
-      self.x -= 1
-      self.y -= 1
+      puts 'SW'
+    else
+      self.x += 1
+      puts 'SE'
     end
+  end
+
+  def move_west
+    self.x -= 1
+    puts 'W'
+  end
+
+  def move_east
+    self.x += 1
+    puts 'E'
+  end
+
+  def find_direction
+    move_west if y == light_y && x > light_x
+    move_east if y == light_y && x < light_x
+    move_north if y > light_y
+    move_south if y < light_y
   end
 
   def start
     loop do
-      remaining_turns = gets.to_i # The remaining amount of turns Thor can move. Do not remove this line.
-      puts find_direction
+      find_direction
     end
   end
 end
