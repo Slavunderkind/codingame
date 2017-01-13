@@ -28,16 +28,15 @@ class ChuckNorris
   end
 
   def norris_parse(series_array)
-    result = ''
-    series_array.each do |a|
-      result += if a[0].zero?
+    parsed = series_array.each_with_object('') do |a, result|
+      result << if a[0].zero?
                   '00 '
                 else
                   '0 '
                 end
-      result += '0' * a[1] + ' '
+      result << '0' * a[1] + ' '
     end
-    result.strip
+    parsed.strip
   end
 
   def start
