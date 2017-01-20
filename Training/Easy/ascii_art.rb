@@ -19,6 +19,7 @@ class AsciiArt
   # Represent letter
   class Letter
     attr_accessor :row, :char
+    LETTERS = ('A'..'Z').to_a << '?'
 
     def initialize(row, char)
       @row = row
@@ -26,9 +27,8 @@ class AsciiArt
     end
 
     def letter_index(letter)
-      ascii_style = ('A'..'Z').to_a << '?'
-      index = ascii_style.find_index(letter.upcase)
-      index ? index : ascii_style.size - 1
+      index = LETTERS.find_index(letter.upcase)
+      index ? index : LETTERS.size - 1
     end
 
     def in_ascii
