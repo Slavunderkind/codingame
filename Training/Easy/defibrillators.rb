@@ -1,12 +1,12 @@
 # Solution for https://www.codingame.com/ide/puzzle/defibrillators
 class Defibrillators
-  attr_accessor :lon, :lat, :n, :defibrilators
+  attr_accessor :lon, :lat, :defibrilators_count, :defibrillators
 
   def initialize
-    @lon = parse(gets.chomp)
-    @lat = parse(gets.chomp)
-    @n = gets.to_i
-    @defibrilators = {}
+    @lon = degrees_to_radians(gets.chomp)
+    @lat = degrees_to_radians(gets.chomp)
+    @defibrilators_count = gets.to_i
+    @defibrillators = {}
   end
 
   def calculate_x(d_long, d_lat)
@@ -22,39 +22,27 @@ class Defibrillators
     Math.sqrt(x * x + y * y) * 6371
   end
 
-  def parse(var)
-    (var.sub(',', '.').to_f * Math::PI) / 180
+  def degrees_to_radians(degrees)
+    (degrees.sub(',', '.').to_f * Math::PI) / 180
   end
 
-  def find_closest(defibrilators_hash)
-    min = defibrilators_hash.values.first
-    closest_name = defibrilators_hash.keys.first
-
-    defibrilators_hash.map do |key, value|
-      if value < min
-        min = value
-        closest_name = key
-      end
-    end
-    closest_name
-  end
-
-  def init_defibrilators(defibrilator)
-    d_long = parse(defibrilator[4])
-    d_lat = parse(defibrilator[5])
+  def add_defibrillator(defibrillator)
+    d_long = degrees_to_radians(defibrillator[4])
+    d_lat = degrees_to_radians(defibrillator[5])
     x = calculate_x(d_long, d_lat)
     y = calculate_y(d_lat)
-    defibrilators[defibrilator[1]] = distance(x, y)
+    defibrillators[defibrillator[1]] = distance(x, y)
   end
 
   def start
-    n.times do
+    Array.new(defibrilators_count) do
       defib = gets.chomp
-      init_defibrilators(defib.split(';'))
+      add_defibrillator(defib.split(';'))
     end
-    puts find_closest(defibrillators)
+    defibrillators.min_by { |_, v| v }.first
   end
 end
 
 obj = Defibrillators.new
-obj.start
+answer = obj.start
+puts answer
