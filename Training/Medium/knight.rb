@@ -3,19 +3,23 @@ STDOUT.sync = true # DO NOT REMOVE
 # Solution for https://www.codingame.com/ide/puzzle/shadows-of-the-knight-episode-1
 class Knight
   attr_accessor :width, :height, :jumps_number, :x, :y, :search_area
+  UP = 'U'
+  DOWN = 'D'
+  LEFT = 'L'
+  RIGHT = 'R'
 
   def initialize
-    @width, @height = gets.split(' ').collect(&:to_i)
+    @width, @height = gets.split.collect(&:to_i)
     @jumps_number = gets.to_i # maximum number of turns before game over.
-    @x, @y = gets.split(' ').collect(&:to_i)
-    @search_area = [[0, 0], [@width - 1, @height - 1]]
+    @x, @y = gets.split.collect(&:to_i)
+    @search_area = [[0, 0], [width - 1, height - 1]]
   end
 
   def change_batman_position(direction)
-    search_area[1][1] = y - 1 if direction.include?('U')
-    search_area[0][1] = y + 1 if direction.include?('D')
-    search_area[1][0] = x - 1 if direction.include?('L')
-    search_area[0][0] = x + 1 if direction.include?('R')
+    search_area[1][1] = y - 1 if direction.include? UP
+    search_area[0][1] = y + 1 if direction.include? DOWN
+    search_area[1][0] = x - 1 if direction.include? LEFT
+    search_area[0][0] = x + 1 if direction.include? RIGHT
   end
 
   def start
