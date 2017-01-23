@@ -1,6 +1,6 @@
 # Solution for https://www.codingame.com/ide/puzzle/chuck-norris
 class ChuckNorris
-  attr_accessor :message
+  attr_reader :message
 
   def initialize
     @message = gets.chomp
@@ -15,39 +15,37 @@ class ChuckNorris
   end
 
   def split_series(array)
-    result = []
-    c = 0
-    array.each_with_index do |item, index|
-      c += 1
+    count = 0
+    array.each_with_object([]).each_with_index do |(item, result), index|
+      count += 1
       next if item == array[index + 1]
-      a = [item, c]
-      result << a
-      c = 0
+      result << [item, count]
+      count = 0
     end
-    result
   end
 
   def norris_parse(series_array)
-    parsed = series_array.each_with_object('') do |a, result|
+    parsed = series_array.each_with_object([]) do |serie, result|
+      # serie[0].zero? ? result << '00' : result << '0'
       result << if a[0].zero?
-                  '00 '
+                  '00'
                 else
-                  '0 '
+                  '0'
                 end
-      result << '0' * a[1] + ' '
+      result << '0' * serie[1]
     end
-    parsed.strip
+    parsed.join(' ')
   end
 
   def start
-    binary = @message.each_char.each_with_object('') do |char, b|
-      b << convert_in_binary(convert_in_ascii(char))
+    binary = ''
+    message.chars do |char|
+      binary << convert_in_binary(convert_in_ascii(char))
     end
-    array = split_series(binary.each_char.map(&:to_i))
-    output = norris_parse(array)
-    puts output
+    array = split_series(binary.chars.map(&:to_i))
+    norris_parse(array)
   end
 end
 
 obj = ChuckNorris.new
-obj.start
+puts obj.start
