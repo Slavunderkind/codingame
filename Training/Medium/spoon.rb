@@ -1,57 +1,49 @@
 STDOUT.sync = true # DO NOT REMOVE
 # Solution for https://www.codingame.com/ide/puzzle/there-is-no-spoon-episode-1
 class Spoon
-  attr_accessor :width, :height, :nodes
+  attr_accessor :nodes
+  attr_reader :width, :height
 
-  def initialize
-    @width = gets.to_i # the number of cells on the X axis
-    @height = gets.to_i # the number of cells on the Y axis
+  def initialize(width, height)
+    @width = width # the number of cells on the X axis
+    @height = height # the number of cells on the Y axis
     @nodes = []
     init_nodes
   end
 
   def init_nodes
-    n = 0
-    height.times do
-      line = gets.chomp # width characters, each either 0 or .
-      find_node(line, n)
-      n += 1
-    end
-  end
+    Array.new(height) do |line_index|
+      line = gets.chomp
+      line.each_char.with_index do |char, char_index|
+        next if char == '.'
 
-  def find_node(chars, n)
-    chars.each_char.with_index do |char, i|
-      next if char == '.'
-
-      nodes.push([i, n])
+        nodes << [char_index, line_index]
+      end
     end
   end
 
   def find_right_node(node)
-    nodes.select { |n| n if n[1] == node[1] && n[0] > node[0] }.min
+    nodes.select { |n| n[1] == node[1] && n[0] > node[0] }.min
   end
 
   def find_bottom_node(node)
-    nodes.select { |n| n if n[0] == node[0] && n[1] > node[1] }.min
+    nodes.select { |n| n[0] == node[0] && n[1] > node[1] }.min
   end
 
   def add_coordinates(result)
-    if result.nil?
-      ' -1 -1'
-    else
-      " #{result[0]} #{result[1]}"
-    end
+    result ? [result[0], result[1]] : [-1, -1]
   end
 
   def start
-    nodes.each do |node|
-      result = "#{node[0]} #{node[1]}"
-      result += add_coordinates(find_right_node(node))
-      result += add_coordinates(find_bottom_node(node))
-      puts result
+    nodes.map do |node|
+      result = node
+      result << add_coordinates(find_right_node(node))
+      result << add_coordinates(find_bottom_node(node))
+      result.flatten.join(' ')
     end
   end
 end
 
-obj = Spoon.new
-obj.start
+obj = Spoon.new(gets.to_i, gets.to_i)
+answer = obj.start
+puts answer
