@@ -3,59 +3,68 @@ STDOUT.sync = true # DO NOT REMOVE
 class Thor
   attr_accessor :light_x, :light_y, :x, :y
 
-  def initialize
-    @light_x, @light_y, @x, @y = gets.split(' ').collect(&:to_i)
+  def initialize(light_x, light_y, thor_x, thor_y)
+    @light_x = light_x
+    @light_y = light_y
+    @x = thor_x
+    @y = thor_y
   end
 
   def move_north
     self.y -= 1
     if x == light_x
-      puts 'N'
+      'N'
     elsif x > light_x
       self.x -= 1
-      puts 'NW'
+      'NW'
     else
       self.x += 1
-      puts 'NE'
+      'NE'
     end
   end
 
   def move_south
     self.y += 1
     if x == light_x
-      puts 'S'
+      'S'
     elsif x > light_x
       self.x -= 1
-      puts 'SW'
+      'SW'
     else
       self.x += 1
-      puts 'SE'
+      'SE'
     end
   end
 
   def move_west
     self.x -= 1
-    puts 'W'
+    'W'
   end
 
   def move_east
     self.x += 1
-    puts 'E'
+    'E'
   end
 
   def find_direction
-    move_west if y == light_y && x > light_x
-    move_east if y == light_y && x < light_x
-    move_north if y > light_y
-    move_south if y < light_y
+    if y == light_y && x > light_x
+      move_west
+    elsif y == light_y && x < light_x
+      move_east
+    elsif y > light_y
+      move_north
+    else
+      move_south
+    end
   end
 
   def start
     loop do
-      find_direction
+      puts find_direction
     end
   end
 end
 
-thor = Thor.new
+light_x, light_y, x, y = gets.split(' ').collect(&:to_i)
+thor = Thor.new(light_x, light_y, x, y)
 thor.start
