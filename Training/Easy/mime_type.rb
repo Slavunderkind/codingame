@@ -1,35 +1,40 @@
 # Solution for https://www.codingame.com/ide/puzzle/mime-type
 class MimeType
-  attr_accessor :n, :q, :associations
+  attr_reader :elements_count, :files_count, :associations
 
-  def initialize
-    @n = gets.to_i # Number of elements which make up the association table.
-    @q = gets.to_i # Number Q of file names to be analyzed.
+  def initialize(elements_count, files_count)
+    @elements_count = elements_count
+    @files_count = files_count
     @associations = init_associations
   end
 
   def init_associations
     associations = {}
-    n.times do
+    elements_count.times do
       ext, mt = gets.split(' ') # ext: file extension, mt: MIME type.
       associations[ext.downcase] = mt
     end
     associations
   end
 
+  def match_file(filename)
+    unknown = 'UNKNOWN'
+    name_and_extension = filename.split('.')
+    if name_and_extension.size > 1 && filename[-1] != '.'
+      result = associations[name_and_extension.last.downcase]
+    end
+    result ||= unknown
+  end
+
   def start
-    q.times do
-      fname = gets.chomp # One file name per line.
-      splitted_fname = fname.split('.')
-      result = nil
-      if splitted_fname.size > 1 && fname[-1] != '.'
-        result = associations.fetch(splitted_fname.last.downcase, 'UNKNOWN')
-      end
-      result = 'UNKNOWN' if result.nil?
-      puts result
+    files_count.times do
+      filename = gets.chomp # One file name per line.
+      puts match_file(filename)
     end
   end
 end
 
-obj = MimeType.new
+elements_count = gets.to_i
+files_count = gets.to_i
+obj = MimeType.new(elements_count, files_count)
 obj.start
