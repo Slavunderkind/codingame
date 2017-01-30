@@ -1,6 +1,6 @@
 # Solution for https://www.codingame.com/ide/puzzle/winamax-battle
 class War
-  attr_accessor :rounds, :player1, :player2, :stop
+  attr_accessor :rounds, :player1, :player2, :stop, :p1_war_cards, :p2_war_cards, :p1_card, :p2_card
 
   def initialize
     @rounds = 0
@@ -8,51 +8,55 @@ class War
     @player1 = Player.new(player1_cards_number)
     player2_cards_number = gets.to_i
     @player2 = Player.new(player2_cards_number)
-    @stop = nil
   end
 
   def equal_game?
     player1.cards.size < 4 || player2.cards.size < 4
   end
 
-  def war(p1_card, p2_card)
+  def chained_war_cards
+    p1_war_cards.unshift(p1_card)
+    p2_war_cards.unshift(p2_card)
+  end
+
+  def war
+    init_war_cards
+    chained_war_cards if player1.cards_on_table.empty?
+    player1.init_cards_on_table(p1_war_cards)
+    player2.init_cards_on_table(p2_war_cards)
+  end
+
+  def init_war_cards
+    self.p1_war_cards = Array.new(4) { player1.cards.pop }
+    self.p2_war_cards = Array.new(4) { player2.cards.pop }
+  end
+
+  def equal_cards
     if equal_game?
       self.stop = true
     else
-      p1_war_cards = init_war_cards(player1.cards)
-      p2_war_cards = init_war_cards(player2.cards)
-      if player1.cards_on_table.any?
-        player1.init_cards_on_table(p1_war_cards)
-        player2.init_cards_on_table(p2_war_cards)
-      else
-        player1.init_cards_on_table(([p1_card] + p1_war_cards).flatten)
-        player2.init_cards_on_table(([p2_card] + p2_war_cards).flatten)
-      end
-      battle(p1_war_cards.last, p2_war_cards.last)
+      war
+      battle
     end
   end
 
-  def init_war_cards(player_cards)
-    Array.new(4) { player_cards.pop }
-  end
-
-  def battle(p1_card, p2_card)
+  def compare_players_cards
     p1_strength = player1.card_strength(p1_card)
     p2_strength = player2.card_strength(p2_card)
-    cards = [p1_card, p2_card]
-    if player1.cards_on_table.any?
-      cards = player1.cards_on_table + player2.cards_on_table
-    end
-    if p1_strength == p2_strength
-      war(p1_card, p2_card)
+    equal_cards if p1_strength == p2_strength
+    cards = player1.cards_on_table + player2.cards_on_table
+    if p1_strength > p2_strength
+      player1.take_cards(cards)
     else
-      if p1_strength > p2_strength
-        player1.take_cards(cards)
-      else
-        player2.take_cards(cards)
-      end
-      clean_cards_on_table
+      player2.take_cards(cards)
     end
+  end
+
+  def battle
+    self.p1_card = player1.cards_on_table.last
+    self.p2_card = player2.cards_on_table.last
+    compare_players_cards
+    clean_cards_on_table
   end
 
   def clean_cards_on_table
@@ -70,10 +74,16 @@ class War
     end
   end
 
+  def game_not_ended?
+    !player1.cards.empty? && !player2.cards.empty? && stop.nil?
+  end
+
   def start_game
-    while !player1.cards.empty? && !player2.cards.empty? && stop.nil?
+    while game_not_ended?
       self.rounds += 1
-      battle(player1.cards.pop, player2.cards.pop)
+      player1.init_cards_on_table([player1.cards.pop])
+      player2.init_cards_on_table([player2.cards.pop])
+      battle
     end
     result
   end
