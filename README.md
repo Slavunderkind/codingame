@@ -1,1 +1,1 @@
-# Solutions for classic puzzles from https://www.codingame.com/
+# Solutions for different coding puzzles
