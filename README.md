@@ -1,1 +1,1 @@
-# Solutions for different coding puzzles
+# Solutions to different coding puzzles
