@@ -38,5 +38,13 @@ RSpec.describe Stock do
         expect(subject).to eq(6)
       end
     end
+
+    context 'when all prices are going down' do
+      let(:prices) { [10, 9, 8, 7] }
+
+      it 'returns negative 1' do
+        expect(subject).to eq(-1)
+      end
+    end
   end
 end
