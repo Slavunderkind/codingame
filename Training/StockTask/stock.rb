@@ -1,28 +1,26 @@
 # frozen_string_literal: true
-
+require 'byebug'
 # Find max profit from buying and selling a stock
 class Stock
-  attr_accessor :max_profits, :prices
+  attr_accessor :profits, :prices
 
   def initialize(args)
     @prices = args.fetch(:prices)
-    @max_profits = []
+    @profits = []
   end
 
   def find_max_profit
+    return unless prices.take(max_price_index).min
+
     prices.max - prices.take(max_price_index).min
   end
 
   def execute
     while prices.any?
-      if max_price_index.zero?
-        prices.delete(prices.max)
-      else
-        max_profits << find_max_profit
-        self.prices = prices.drop(max_price_index + 1)
-      end
+      profits << find_max_profit
+      self.prices = prices.drop(max_price_index + 1)
     end
-    max_profits.max
+    profits.compact.max
   end
 
   private
