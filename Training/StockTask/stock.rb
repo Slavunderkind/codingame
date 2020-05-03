@@ -10,15 +10,15 @@ class Stock
   end
 
   def find_max_profit
-    return unless prices.take(sell_price[:index]).min
+    return unless prices.take(sell_price_index).min
 
-    prices.max - prices.take(sell_price[:index]).min
+    prices.max - prices.take(sell_price_index).min
   end
 
   def execute
     while prices.any?
       profits << find_max_profit
-      self.prices = prices.drop(sell_price[:index] + 1)
+      self.prices = prices.drop(sell_price_index + 1)
     end
     profits.compact.max
   end
@@ -29,11 +29,7 @@ class Stock
     prices.take(selling_price_index)
   end
 
-  def sell_price
-    sell_price_with_index = prices.each_with_index.max
-    {
-      value: sell_price_with_index.first,
-      index: sell_price_with_index.last
-    }
+  def sell_price_index
+    prices.each_with_index.max.last
   end
 end
