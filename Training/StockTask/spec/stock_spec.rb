@@ -31,7 +31,7 @@ RSpec.describe Stock do
       end
     end
 
-    context 'when max value is before min' do
+    context 'when desire max value is second max' do
       let(:prices) { [9, 10, 1, 7] }
 
       it 'returns 6' do
