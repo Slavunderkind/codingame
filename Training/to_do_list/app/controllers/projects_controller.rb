@@ -23,7 +23,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def show
+  def edit
   end
 
   def destroy
@@ -31,6 +31,21 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def show
+  end
+
+  def update
+    respond_to do |format|
+      if @project.update(project_params)
+        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
+        format.json { render :show, status: :ok, location: @project }
+      else
+        format.html { render :edit }
+        format.json { render json: @project.errors, status: :unprocessable_entity }
+      end
     end
   end
 
