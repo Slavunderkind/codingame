@@ -6,3 +6,5 @@
   <%= link_to "Log In", login_path %>
 <% end %>
 <p id="notice"><%= notice %></p>
+
+<%= render template: 'projects/index', projects: @projects %>
